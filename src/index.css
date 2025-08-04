@@ -1,0 +1,246 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sophisticated Enterprise Design System - Muted Premium Aesthetic */
+
+@layer base {
+  :root {
+    /* Cool white/light gray base */
+    --background: 220 14% 98%;
+    --foreground: 220 14% 8%;
+
+    /* Premium card styling */
+    --card: 0 0% 100%;
+    --card-foreground: 220 14% 8%;
+    --card-hover: 220 14% 97%;
+
+    /* Modern popovers */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 14% 8%;
+
+    /* Deep indigo primary accent */
+    --primary: 230 48% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 230 48% 95%;
+    --primary-hover: 230 48% 40%;
+
+    /* Steel/slate secondary accent */
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 220 14% 35%;
+    --secondary-hover: 220 14% 88%;
+
+    /* Muted neutral tones */
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 14% 45%;
+
+    /* Sophisticated accent */
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 14% 35%;
+
+    /* Refined status colors - muted and sophisticated */
+    --success: 160 30% 40%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 160 30% 95%;
+    
+    --warning: 35 25% 45%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 35 25% 95%;
+    
+    --destructive: 0 25% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 0 25% 95%;
+
+    /* Refined borders and inputs */
+    --border: 220 14% 88%;
+    --input: 220 14% 94%;
+    --input-hover: 220 14% 90%;
+    --ring: 230 48% 45%;
+
+    /* Modern radius system */
+    --radius: 0.5rem;
+    --radius-sm: 0.375rem;
+    --radius-lg: 0.75rem;
+
+    /* Premium sidebar */
+    --sidebar-background: 220 14% 98%;
+    --sidebar-foreground: 220 14% 20%;
+    --sidebar-primary: 230 48% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 95%;
+    --sidebar-accent-foreground: 220 14% 20%;
+    --sidebar-border: 220 14% 90%;
+    --sidebar-ring: 230 48% 45%;
+
+    /* Sophisticated surface tokens */
+    --surface-50: 220 14% 97%;
+    --surface-100: 220 14% 95%;
+    --surface-200: 220 14% 90%;
+    --surface-300: 220 14% 85%;
+    --surface-400: 220 14% 70%;
+    --surface-500: 220 14% 55%;
+    --surface-600: 220 14% 40%;
+    --surface-700: 220 14% 25%;
+    --surface-800: 220 14% 15%;
+    --surface-900: 220 14% 8%;
+
+    /* Subtle gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)));
+    --gradient-surface: linear-gradient(135deg, hsl(var(--surface-50)), hsl(var(--surface-100)));
+    
+    /* Refined shadows */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+
+    /* Smooth transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Deep charcoal base */
+    --background: 220 14% 6%;
+    --foreground: 220 14% 95%;
+
+    --card: 220 14% 8%;
+    --card-foreground: 220 14% 95%;
+    --card-hover: 220 14% 10%;
+
+    --popover: 220 14% 8%;
+    --popover-foreground: 220 14% 95%;
+
+    /* Deep indigo primary - slightly brighter in dark mode */
+    --primary: 230 48% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 230 20% 20%;
+    --primary-hover: 230 48% 60%;
+
+    /* Steel/slate secondary */
+    --secondary: 220 14% 15%;
+    --secondary-foreground: 220 14% 70%;
+    --secondary-hover: 220 14% 18%;
+
+    --muted: 220 14% 15%;
+    --muted-foreground: 220 14% 65%;
+
+    --accent: 220 14% 15%;
+    --accent-foreground: 230 48% 55%;
+
+    /* Refined status colors for dark mode */
+    --success: 160 30% 50%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 160 25% 15%;
+    
+    --warning: 35 25% 55%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 35 25% 15%;
+    
+    --destructive: 0 25% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 0 25% 15%;
+
+    --border: 220 14% 15%;
+    --input: 220 14% 15%;
+    --input-hover: 220 14% 18%;
+    --ring: 230 48% 55%;
+
+    --sidebar-background: 220 14% 6%;
+    --sidebar-foreground: 220 14% 80%;
+    --sidebar-primary: 230 48% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 15%;
+    --sidebar-accent-foreground: 220 14% 80%;
+    --sidebar-border: 220 14% 15%;
+    --sidebar-ring: 230 48% 55%;
+
+    --surface-50: 220 14% 12%;
+    --surface-100: 220 14% 10%;
+    --surface-200: 220 14% 8%;
+    --surface-300: 220 14% 6%;
+    --surface-400: 220 14% 30%;
+    --surface-500: 220 14% 45%;
+    --surface-600: 220 14% 60%;
+    --surface-700: 220 14% 75%;
+    --surface-800: 220 14% 85%;
+    --surface-900: 220 14% 95%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)));
+    --gradient-surface: linear-gradient(135deg, hsl(var(--surface-300)), hsl(var(--surface-200)));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* Premium card styles */
+  .card-premium {
+    @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .card-interactive {
+    @apply card-premium hover:border-primary/20 hover:bg-card-hover cursor-pointer;
+  }
+
+  /* KPI card styles */
+  .kpi-card {
+    @apply card-premium p-6 text-center space-y-2;
+  }
+
+  .kpi-value {
+    @apply text-2xl font-bold text-foreground;
+  }
+
+  .kpi-label {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .kpi-change {
+    @apply text-xs font-medium;
+  }
+
+  /* Status indicators */
+  .status-active {
+    @apply bg-success text-success-foreground;
+  }
+
+  .status-inactive {
+    @apply bg-surface-200 text-surface-600;
+  }
+
+  .status-testing {
+    @apply bg-warning text-warning-foreground;
+  }
+
+  .status-error {
+    @apply bg-destructive text-destructive-foreground;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    @apply animate-in fade-in duration-300;
+  }
+
+  .animate-slide-in {
+    @apply animate-in slide-in-from-bottom-4 duration-300;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+}
