@@ -886,20 +886,13 @@ export default function CreateAgent() {
 
       {/* Horizontal Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-7 bg-surface-100 p-1 h-auto border border-surface-200">
+              <TabsList className="grid w-full grid-cols-6 bg-surface-100 p-1 h-auto border border-surface-200">
                 <TabsTrigger 
                   value="basic" 
                   className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
                 >
             <Settings className="w-4 h-4 mr-2" />
                   Basic Setup
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="language"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
-                >
-            <Languages className="w-4 h-4 mr-2" />
-                  Language
                 </TabsTrigger>
                 <TabsTrigger 
                   value="tools"
@@ -1050,35 +1043,6 @@ export default function CreateAgent() {
                           />
                         </div>
                       </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="language" className="space-y-6">
-                <Card className="card-premium">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
-                        <Languages className="w-5 h-5 text-accent-foreground" />
-                      </div>
-                      <span>Language</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="language" className="text-sm font-medium">Language</Label>
-                      <Select value={agentConfig.language} onValueChange={(value) => setAgentConfig({...agentConfig, language: value})}>
-                        <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
-                          <SelectValue placeholder="Select language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="en">English</SelectItem>
-                          <SelectItem value="es">Spanish</SelectItem>
-                          <SelectItem value="fr">French</SelectItem>
-                          <SelectItem value="de">German</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
                   </CardContent>
                 </Card>
