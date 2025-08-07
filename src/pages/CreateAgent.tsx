@@ -18,7 +18,8 @@ import {
   CheckCircle, AlertCircle, Clock, DollarSign, BarChart3,
   Target, Palette, Languages, Volume2, Calendar, Mail,
   ShoppingCart, CreditCard, ArrowRight, ChevronRight, Code,
-  MessageCircle, ShoppingBag, GraduationCap, X
+  MessageCircle, ShoppingBag, GraduationCap, X, Send, Mic,
+  Camera, Paperclip, Smile
 } from "lucide-react";
 
 interface AgentTemplate {
@@ -162,7 +163,17 @@ export default function CreateAgent() {
   const [activeTab, setActiveTab] = useState("template");
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [hasSelectedTemplate, setHasSelectedTemplate] = useState(false);
+  const [previewMessage, setPreviewMessage] = useState("");
+  const [previewMessages, setPreviewMessages] = useState<Array<{type: 'user' | 'agent', content: string, timestamp: Date}>>([
+    {
+      type: 'agent',
+      content: 'Hello! I\'m your AI assistant. How can I help you today?',
+      timestamp: new Date()
+    }
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
   const [agentConfig, setAgentConfig] = useState<AgentConfig>({
     name: "",
     description: "",
@@ -240,6 +251,72 @@ export default function CreateAgent() {
 
   const handleCreateAgent = () => {
     setShowSummary(true);
+  };
+
+  const handlePreview = () => {
+    setShowPreview(true);
+  };
+
+  const handleSendPreviewMessage = () => {
+    if (!previewMessage.trim()) return;
+
+    // Add user message
+    const userMessage = {
+      type: 'user' as const,
+      content: previewMessage,
+      timestamp: new Date()
+    };
+    setPreviewMessages(prev => [...prev, userMessage]);
+    setPreviewMessage("");
+
+    // Simulate agent response
+    setIsTyping(true);
+    setTimeout(() => {
+      const agentResponse = generateAgentResponse(previewMessage);
+      const agentMessage = {
+        type: 'agent' as const,
+        content: agentResponse,
+        timestamp: new Date()
+      };
+      setPreviewMessages(prev => [...prev, agentMessage]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  const generateAgentResponse = (userMessage: string): string => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Generate response based on agent configuration
+    if (agentConfig.systemPrompt) {
+      // Simple response generation based on system prompt
+      if (agentConfig.systemPrompt.toLowerCase().includes('customer support')) {
+        return "I understand you need help. As a customer support representative, I'm here to assist you. Could you please provide more details about your issue so I can better assist you?";
+      } else if (agentConfig.systemPrompt.toLowerCase().includes('sales')) {
+        return "Thank you for your interest! I'd be happy to help you with our products and services. What specific information are you looking for?";
+      } else if (agentConfig.systemPrompt.toLowerCase().includes('react')) {
+        return "I can help you with React development! I can assist with code reviews, debugging, best practices, and explaining concepts. What specific React question do you have?";
+      } else if (agentConfig.systemPrompt.toLowerCase().includes('tutor')) {
+        return "I'm here to help you learn! I can explain concepts, solve problems, and provide educational guidance. What topic would you like to explore?";
+      }
+    }
+
+    // Default responses based on message content
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+      return `Hello! I'm ${agentConfig.name || 'your AI assistant'}. How can I help you today?`;
+    } else if (lowerMessage.includes('help')) {
+      return "I'm here to help! Please let me know what you need assistance with.";
+    } else if (lowerMessage.includes('thank')) {
+      return "You're welcome! Is there anything else I can help you with?";
+    } else {
+      return "I understand your message. How can I assist you further?";
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendPreviewMessage();
+    }
   };
 
   const getLanguageName = (code: string) => {
@@ -406,7 +483,7 @@ export default function CreateAgent() {
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handlePreview}>
               <Eye className="w-4 h-4 mr-2" />
               Preview
             </Button>
@@ -625,6 +702,143 @@ export default function CreateAgent() {
                 <Bot className="w-4 h-4 mr-2" />
                 Deploy Agent
               </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Preview Modal */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <Eye className="w-6 h-6 text-primary" />
+              <span>Agent Preview</span>
+            </DialogTitle>
+            <DialogDescription>
+              Preview how your AI agent will appear and interact with users
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex flex-col h-[600px]">
+            {/* Agent Header */}
+            <div className="flex items-center space-x-3 p-4 border-b bg-muted/50">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                <Bot className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground">
+                  {agentConfig.name || "AI Assistant"}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {agentConfig.description || "AI-powered assistant"}
+                </p>
+              </div>
+              <div className="flex items-center space-x-2">
+                {agentConfig.capabilities.voice && (
+                  <Badge variant="secondary" className="text-xs">
+                    <Mic className="w-3 h-3 mr-1" />
+                    Voice
+                  </Badge>
+                )}
+                {agentConfig.capabilities.vision && (
+                  <Badge variant="secondary" className="text-xs">
+                    <Camera className="w-3 h-3 mr-1" />
+                    Vision
+                  </Badge>
+                )}
+                {agentConfig.capabilities.fileUpload && (
+                  <Badge variant="secondary" className="text-xs">
+                    <Paperclip className="w-3 h-3 mr-1" />
+                    Files
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background">
+              {previewMessages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-lg p-3 ${
+                      message.type === 'user'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-foreground'
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                    <p className="text-xs opacity-70 mt-1">
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-muted rounded-lg p-3">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Input Area */}
+            <div className="border-t p-4 bg-background">
+              <div className="flex items-end space-x-2">
+                <div className="flex-1 relative">
+                  <Textarea
+                    value={previewMessage}
+                    onChange={(e) => setPreviewMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Type your message..."
+                    className="min-h-[40px] max-h-[120px] resize-none pr-10"
+                    rows={1}
+                  />
+                  <div className="absolute right-2 bottom-2 flex items-center space-x-1">
+                    {agentConfig.capabilities.fileUpload && (
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                        <Paperclip className="w-3 h-3" />
+                      </Button>
+                    )}
+                    {agentConfig.capabilities.vision && (
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                        <Camera className="w-3 h-3" />
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <Smile className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </div>
+                <Button
+                  onClick={handleSendPreviewMessage}
+                  disabled={!previewMessage.trim() || isTyping}
+                  className="bg-primary hover:bg-primary-hover text-primary-foreground"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              {/* Agent Info */}
+              <div className="mt-3 pt-3 border-t">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center space-x-4">
+                    <span>Language: {getLanguageName(agentConfig.language)}</span>
+                    <span>Model: {agentConfig.pricing.model}</span>
+                    {agentConfig.capabilities.voice && <span>Voice enabled</span>}
+                  </div>
+                  <span>Preview Mode</span>
+                </div>
+              </div>
             </div>
           </div>
         </DialogContent>
