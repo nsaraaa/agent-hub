@@ -19,8 +19,11 @@ import {
   Target, Palette, Languages, Volume2, Calendar, Mail,
   ShoppingCart, CreditCard, ArrowRight, ChevronRight, Code,
   MessageCircle, ShoppingBag, GraduationCap, X, Send, Mic,
-  Camera, Paperclip, Smile
+  Camera, Paperclip, Smile, MoreVertical, Edit
 } from "lucide-react";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useForm } from "react-hook-form";
 
 interface AgentTemplate {
   id: string;
@@ -200,6 +203,28 @@ export default function CreateAgent() {
     }
   });
 
+  // Add mockTools state for demonstration
+  const [mockTools, setMockTools] = useState([
+    {
+      name: "Weather API",
+      url: "https://api.weather.com/mcp",
+      description: "Provides real-time weather data for any location.",
+      isActive: true,
+    },
+    {
+      name: "Database Connector",
+      url: "https://db.example.com/mcp",
+      description: "Allows access to company database records.",
+      isActive: false,
+    },
+    {
+      name: "Email Sender",
+      url: "https://mail.example.com/mcp",
+      description: "Send automated emails to users.",
+      isActive: true,
+    },
+  ]);
+
   const handleTemplateSelect = (templateId: string) => {
     const template = predefinedTemplates.find(t => t.id === templateId);
     if (template) {
@@ -350,6 +375,21 @@ export default function CreateAgent() {
       default: return capability;
     }
   };
+
+  // Add form state for settings and voice tabs
+  const settingsForm = useForm({
+    defaultValues: {
+      language: "English (US)",
+      model: "GPT-4 Turbo",
+      theme: "Light",
+      enableImageUpload: false,
+      maxResponseLength: "Medium (300 words)",
+      temperature: 50,
+      enableVoicePrompting: false,
+      enableVoiceCalling: false,
+      voiceModel: "Professional Female",
+    },
+  });
 
   // Show template selection screen if no template has been selected yet
   if (!hasSelectedTemplate) {
@@ -846,7 +886,7 @@ export default function CreateAgent() {
 
       {/* Horizontal Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-5 bg-surface-100 p-1 h-auto border border-surface-200">
+              <TabsList className="grid w-full grid-cols-7 bg-surface-100 p-1 h-auto border border-surface-200">
                 <TabsTrigger 
                   value="basic" 
                   className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
@@ -862,11 +902,11 @@ export default function CreateAgent() {
                   Language
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="mcp-links"
+                  value="tools"
                   className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
                 >
             <Link className="w-4 h-4 mr-2" />
-                  MCP Links
+                  MCP Tools
                 </TabsTrigger>
                 <TabsTrigger 
                   value="knowledge"
@@ -888,6 +928,13 @@ export default function CreateAgent() {
                 >
             <Settings className="w-4 h-4 mr-2" />
                   Settings
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="voice"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
+                >
+            <Mic className="w-4 h-4 mr-2" />
+                  Voice Features
                 </TabsTrigger>
               </TabsList>
 
@@ -1037,175 +1084,116 @@ export default function CreateAgent() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="mcp-links" className="space-y-6">
-                <Card className="card-premium">
+              {/* Replace MCP Links tab with MCP Tools tab */}
+              <TabsContent value="tools">
+                <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
-                        <Link className="w-5 h-5 text-accent-foreground" />
-                      </div>
-                      <span>MCP Links</span>
-                    </CardTitle>
+                    <CardTitle>Model Context Protocol (MCP) Tools</CardTitle>
+                    <p className="text-slate-600">
+                      Configure external tools and APIs that your chatbot can
+                      access to provide enhanced functionality.
+                    </p>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-foreground">MCP Links</h3>
-                      <Button 
-                        onClick={() => {
-                          const newLink = {
-                            id: Date.now().toString(),
-                            name: "",
-                            url: "",
-                            description: "",
-                            type: "custom"
-                          };
-                          setAgentConfig({
-                            ...agentConfig,
-                            integrations: [...agentConfig.integrations, newLink]
-                          });
-                        }}
-                        className="bg-primary hover:bg-primary-hover text-primary-foreground"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add MCP Link
-                      </Button>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Connect your agent to external services and APIs through MCP links. These enable your agent to access real-time data, perform actions, and integrate with third-party systems.
-                    </p>
-                    {agentConfig.integrations.length === 0 ? (
-                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center bg-surface-50 hover:bg-surface-100 transition-colors">
-                        <div className="w-12 h-12 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Link className="w-6 h-6 text-primary" />
-                        </div>
-                        <h4 className="font-medium text-foreground mb-1">No MCP Links Added</h4>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Add MCP links to enable your agent to connect with external services and APIs
-                        </p>
-                        <Button 
-                          onClick={() => {
-                            const newLink = {
-                              id: Date.now().toString(),
-                              name: "",
-                              url: "",
-                              description: "",
-                              type: "custom"
-                            };
-                            setAgentConfig({
-                              ...agentConfig,
-                              integrations: [...agentConfig.integrations, newLink]
-                            });
-                          }}
-                          variant="outline" 
-                          size="sm"
-                          className="transition-all duration-fast hover:border-primary"
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add First MCP Link
+                    {/* Add Tool Section */}
+                    <div className="border border-slate-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="font-medium text-slate-900">
+                          Add New Tool
+                        </h4>
+                        <Button size="sm">
+                          <Plus className="mr-1" size={14} />
+                          Add Tool
                         </Button>
                       </div>
-                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label>Tool Name</Label>
+                          <Input
+                            placeholder="e.g., Weather API"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label>MCP URL</Label>
+                          <Input
+                            placeholder="https://api.example.com/mcp"
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <Label>Description</Label>
+                        <Textarea
+                          placeholder="Describe what this tool does..."
+                          className="mt-1 h-20"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Configured Tools */}
+                    <div>
+                      <h4 className="font-medium text-slate-900 mb-4">
+                        Configured Tools
+                      </h4>
                       <div className="space-y-3">
-                        {agentConfig.integrations.map((link, index) => (
-                          <Card key={link.id} className="p-4 border border-border">
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                <h4 className="font-medium text-foreground">MCP Link {index + 1}</h4>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    setAgentConfig({
-                                      ...agentConfig,
-                                      integrations: agentConfig.integrations.filter((_, i) => i !== index)
-                                    });
-                                  }}
-                                  className="text-muted-foreground hover:text-destructive"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                                <div className="space-y-2">
-                                  <Label className="text-sm font-medium">Link Name</Label>
-                                  <Input
-                                    placeholder="e.g., Weather API, Database Connection"
-                                    value={link.name}
-                                    onChange={(e) => {
-                                      const updatedLinks = [...agentConfig.integrations];
-                                      updatedLinks[index].name = e.target.value;
-                                      setAgentConfig({
-                                        ...agentConfig,
-                                        integrations: updatedLinks
-                                      });
-                                    }}
-                                    className="transition-colors hover:border-input-hover focus:border-primary"
+                        {mockTools.map((tool, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-4 border border-slate-200 rounded-lg"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                                  tool.name.includes("Weather")
+                                    ? "bg-emerald-50"
+                                    : tool.name.includes("Database")
+                                    ? "bg-blue-50"
+                                    : "bg-amber-50"
+                                }`}
+                              >
+                                {tool.name.includes("Weather") ? (
+                                  <Cloud
+                                    className={`text-emerald-500`}
+                                    size={16}
                                   />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label className="text-sm font-medium">Link Type</Label>
-                                  <Select 
-                                    value={link.type} 
-                                    onValueChange={(value) => {
-                                      const updatedLinks = [...agentConfig.integrations];
-                                      updatedLinks[index].type = value;
-                                      setAgentConfig({
-                                        ...agentConfig,
-                                        integrations: updatedLinks
-                                      });
-                                    }}
-                                  >
-                                    <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
-                                      <SelectValue placeholder="Select type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="api">API Endpoint</SelectItem>
-                                      <SelectItem value="database">Database</SelectItem>
-                                      <SelectItem value="file-system">File System</SelectItem>
-                                      <SelectItem value="calendar">Calendar</SelectItem>
-                                      <SelectItem value="email">Email</SelectItem>
-                                      <SelectItem value="custom">Custom</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
+                                ) : tool.name.includes("Database") ? (
+                                  <Database
+                                    className={`text-blue-500`}
+                                    size={16}
+                                  />
+                                ) : (
+                                  <Mail
+                                    className={`text-amber-500`}
+                                    size={16}
+                                  />
+                                )}
                               </div>
-                              <div className="space-y-2">
-                                <Label className="text-sm font-medium">Connection URL</Label>
-                                <Input
-                                  placeholder="e.g., https://api.example.com/v1, mcp://localhost:3000"
-                                  value={link.url}
-                                  onChange={(e) => {
-                                    const updatedLinks = [...agentConfig.integrations];
-                                    updatedLinks[index].url = e.target.value;
-                                    setAgentConfig({
-                                      ...agentConfig,
-                                      integrations: updatedLinks
-                                    });
-                                  }}
-                                  className="transition-colors hover:border-input-hover focus:border-primary"
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label className="text-sm font-medium">Description</Label>
-                                <Textarea
-                                  placeholder="Describe what this MCP link provides access to..."
-                                  value={link.description}
-                                  onChange={(e) => {
-                                    const updatedLinks = [...agentConfig.integrations];
-                                    updatedLinks[index].description = e.target.value;
-                                    setAgentConfig({
-                                      ...agentConfig,
-                                      integrations: updatedLinks
-                                    });
-                                  }}
-                                  className="min-h-[60px] transition-colors hover:border-input-hover focus:border-primary"
-                                />
+                              <div>
+                                <h5 className="font-medium text-slate-900">
+                                  {tool.name}
+                                </h5>
+                                <p className="text-sm text-slate-500">
+                                  {tool.description}
+                                </p>
                               </div>
                             </div>
-                          </Card>
+                            <div className="flex items-center space-x-2">
+                              <Badge
+                                variant={
+                                  tool.isActive ? "default" : "secondary"
+                                }
+                              >
+                                {tool.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical size={16} />
+                              </Button>
+                            </div>
+                          </div>
                         ))}
                       </div>
-                    )}
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -1350,63 +1338,335 @@ export default function CreateAgent() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="settings" className="space-y-6">
-                <Card className="card-premium">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
-                        <Settings className="w-5 h-5 text-accent-foreground" />
-                      </div>
-                      <span>Advanced Settings</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Response Time Limit</Label>
-                        <Select>
-                          <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
-                            <SelectValue placeholder="30 seconds" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="15">15 seconds</SelectItem>
-                            <SelectItem value="30">30 seconds</SelectItem>
-                            <SelectItem value="60">60 seconds</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Max Conversation Length</Label>
-                        <Select>
-                          <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
-                            <SelectValue placeholder="50 messages" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="25">25 messages</SelectItem>
-                            <SelectItem value="50">50 messages</SelectItem>
-                            <SelectItem value="100">100 messages</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+              <TabsContent value="settings">
+                <Form {...settingsForm}>
+                  <form>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>General Settings</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <FormField
+                            control={settingsForm.control}
+                            name="language"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Language</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="English (US)">English (US)</SelectItem>
+                                    <SelectItem value="English (UK)">English (UK)</SelectItem>
+                                    <SelectItem value="Spanish">Spanish</SelectItem>
+                                    <SelectItem value="French">French</SelectItem>
+                                    <SelectItem value="German">German</SelectItem>
+                                    <SelectItem value="Chinese (Simplified)">Chinese (Simplified)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={settingsForm.control}
+                            name="model"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>LLM Model</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="GPT-4 Turbo">GPT-4 Turbo</SelectItem>
+                                    <SelectItem value="GPT-4">GPT-4</SelectItem>
+                                    <SelectItem value="GPT-3.5 Turbo">GPT-3.5 Turbo</SelectItem>
+                                    <SelectItem value="Claude 3 Opus">Claude 3 Opus</SelectItem>
+                                    <SelectItem value="Claude 3 Sonnet">Claude 3 Sonnet</SelectItem>
+                                    <SelectItem value="Gemini Pro">Gemini Pro</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={settingsForm.control}
+                            name="theme"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Theme</FormLabel>
+                                <div className="grid grid-cols-3 gap-3 mt-2">
+                                  {["Light", "Dark", "Auto"].map((theme) => (
+                                    <button
+                                      key={theme}
+                                      type="button"
+                                      onClick={() => field.onChange(theme)}
+                                      className={`p-3 border-2 rounded-lg text-center transition-colors ${field.value === theme ? "border-blue-500 bg-blue-50" : "border-slate-300 hover:border-slate-400"}`}
+                                    >
+                                      <div className={`w-full h-8 rounded mb-2 ${theme === "Light" ? "bg-white" : theme === "Dark" ? "bg-slate-800" : "bg-gradient-to-r from-white to-slate-800"}`}></div>
+                                      <span className={`text-xs font-medium ${field.value === theme ? "text-blue-700" : "text-slate-700"}`}>{theme}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={settingsForm.control}
+                            name="enableImageUpload"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>Enable image upload support</FormLabel>
+                                  <p className="text-xs text-slate-500">Allow users to upload and analyze images</p>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Advanced Settings</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div>
+                            <Label>Response Timeout (seconds)</Label>
+                            <Input type="number" defaultValue={30} min={5} max={300} className="mt-1" />
+                          </div>
+                          <FormField
+                            control={settingsForm.control}
+                            name="maxResponseLength"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Max Response Length</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="Short (100 words)">Short (100 words)</SelectItem>
+                                    <SelectItem value="Medium (300 words)">Medium (300 words)</SelectItem>
+                                    <SelectItem value="Long (500 words)">Long (500 words)</SelectItem>
+                                    <SelectItem value="Very Long (1000 words)">Very Long (1000 words)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={settingsForm.control}
+                            name="temperature"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Temperature (Creativity)</FormLabel>
+                                <div className="flex items-center space-x-3 mt-2">
+                                  <span className="text-sm text-slate-500">Focused</span>
+                                  <Input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={field.value}
+                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                    className="flex-1"
+                                  />
+                                  <span className="text-sm text-slate-500">Creative</span>
+                                </div>
+                                <p className="text-xs text-slate-500 mt-1">Current: {(field.value / 100).toFixed(1)}</p>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="space-y-3">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="conversation-memory" />
+                              <Label htmlFor="conversation-memory">Enable conversation memory</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="log-conversations" defaultChecked />
+                              <Label htmlFor="log-conversations">Log conversations for analytics</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="fallback-human" />
+                              <Label htmlFor="fallback-human">Enable fallback to human agent</Label>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
                     </div>
+                  </form>
+                </Form>
+              </TabsContent>
 
-                    <Card className="p-4 border border-border">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <Label className="text-sm font-medium">Enable Analytics</Label>
-                          <p className="text-sm text-muted-foreground">Track performance metrics and user interactions</p>
-                        </div>
-                        <Switch 
-                          checked={agentConfig.analytics.enabled}
-                          onCheckedChange={(checked) => setAgentConfig({
-                            ...agentConfig,
-                            analytics: {...agentConfig.analytics, enabled: checked}
-                          })}
-                        />
-                      </div>
-                    </Card>
-                  </CardContent>
-                </Card>
+              <TabsContent value="voice">
+                <Form {...settingsForm}>
+                  <form>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Voice Input Settings</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <FormField
+                            control={settingsForm.control}
+                            name="enableVoicePrompting"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>Enable voice prompting</FormLabel>
+                                  <p className="text-sm text-slate-500">Allow users to speak their queries instead of typing</p>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                          <div>
+                            <Label>Speech Recognition Language</Label>
+                            <Select defaultValue="English (US)">
+                              <SelectTrigger className="mt-1">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="English (US)">English (US)</SelectItem>
+                                <SelectItem value="English (UK)">English (UK)</SelectItem>
+                                <SelectItem value="Spanish">Spanish</SelectItem>
+                                <SelectItem value="French">French</SelectItem>
+                                <SelectItem value="German">German</SelectItem>
+                                <SelectItem value="Chinese (Mandarin)">Chinese (Mandarin)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Voice Activation</Label>
+                            <div className="space-y-2 mt-2">
+                              <div className="flex items-center space-x-2">
+                                <input type="radio" name="activation" defaultChecked className="text-blue-500" />
+                                <Label>Push to talk</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input type="radio" name="activation" className="text-blue-500" />
+                                <Label>Voice activation (wake word)</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <input type="radio" name="activation" className="text-blue-500" />
+                                <Label>Continuous listening</Label>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Wake Word (if enabled)</Label>
+                            <Input placeholder="Hey Assistant" disabled className="mt-1" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Voice Calling & Response</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <FormField
+                            control={settingsForm.control}
+                            name="enableVoiceCalling"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>Enable voice calling</FormLabel>
+                                  <p className="text-sm text-slate-500">Allow users to call and interact with the chatbot via phone</p>
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                          <div>
+                            <Label>Voice Response Type</Label>
+                            <Select defaultValue="Text-to-Speech (Synthetic)">
+                              <SelectTrigger className="mt-1">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Text-to-Speech (Synthetic)">Text-to-Speech (Synthetic)</SelectItem>
+                                <SelectItem value="Pre-recorded Audio">Pre-recorded Audio</SelectItem>
+                                <SelectItem value="Hybrid (TTS + Recorded)">Hybrid (TTS + Recorded)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <FormField
+                            control={settingsForm.control}
+                            name="voiceModel"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Voice Model</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="Professional Female">Professional Female</SelectItem>
+                                    <SelectItem value="Professional Male">Professional Male</SelectItem>
+                                    <SelectItem value="Friendly Female">Friendly Female</SelectItem>
+                                    <SelectItem value="Friendly Male">Friendly Male</SelectItem>
+                                    <SelectItem value="Custom Voice (Upload)">Custom Voice (Upload)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div>
+                            <Label>Call Routing</Label>
+                            <div className="space-y-3 mt-2">
+                              <div className="border border-slate-200 rounded-lg p-3">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="font-medium text-slate-900">Technical Support</span>
+                                  <Button variant="ghost" size="sm">
+                                    <Edit size={14} />
+                                  </Button>
+                                </div>
+                                <p className="text-sm text-slate-500">Route to +1-800-SUPPORT</p>
+                                <p className="text-xs text-slate-400">Keywords: "technical", "broken", "not working"</p>
+                              </div>
+                              <div className="border border-slate-200 rounded-lg p-3">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="font-medium text-slate-900">Sales Inquiries</span>
+                                  <Button variant="ghost" size="sm">
+                                    <Edit size={14} />
+                                  </Button>
+                                </div>
+                                <p className="text-sm text-slate-500">Route to +1-800-SALES</p>
+                                <p className="text-xs text-slate-400">Keywords: "buy", "purchase", "pricing"</p>
+                              </div>
+                              <button className="w-full border-2 border-dashed border-slate-300 rounded-lg p-3 text-slate-500 hover:border-slate-400 hover:text-slate-600">
+                                <Plus className="mr-2 inline" size={16} />
+                                Add New Route
+                              </button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </form>
+                </Form>
               </TabsContent>
             </Tabs>
     </div>
