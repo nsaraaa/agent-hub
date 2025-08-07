@@ -846,13 +846,27 @@ export default function CreateAgent() {
 
       {/* Horizontal Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4 bg-surface-100 p-1 h-auto border border-surface-200">
+              <TabsList className="grid w-full grid-cols-5 bg-surface-100 p-1 h-auto border border-surface-200">
                 <TabsTrigger 
                   value="basic" 
                   className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
                 >
             <Settings className="w-4 h-4 mr-2" />
                   Basic Setup
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="language"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
+                >
+            <Languages className="w-4 h-4 mr-2" />
+                  Language
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="mcp-links"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200"
+                >
+            <Link className="w-4 h-4 mr-2" />
+                  MCP Links
                 </TabsTrigger>
                 <TabsTrigger 
                   value="knowledge"
@@ -899,20 +913,7 @@ export default function CreateAgent() {
                           className="transition-colors hover:border-input-hover focus:border-primary"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="language" className="text-sm font-medium">Language</Label>
-                        <Select value={agentConfig.language} onValueChange={(value) => setAgentConfig({...agentConfig, language: value})}>
-                          <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
-                            <SelectValue placeholder="Select language" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="en">English</SelectItem>
-                            <SelectItem value="es">Spanish</SelectItem>
-                            <SelectItem value="fr">French</SelectItem>
-                            <SelectItem value="de">German</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      {/* Language selection moved to Language tab */}
                     </div>
 
                     <div className="space-y-2">
@@ -1003,10 +1004,84 @@ export default function CreateAgent() {
                         </div>
                       </Card>
                     </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-foreground">MCP Links</h3>
+              <TabsContent value="language" className="space-y-6">
+                <Card className="card-premium">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                        <Languages className="w-5 h-5 text-accent-foreground" />
+                      </div>
+                      <span>Language</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="language" className="text-sm font-medium">Language</Label>
+                      <Select value={agentConfig.language} onValueChange={(value) => setAgentConfig({...agentConfig, language: value})}>
+                        <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
+                          <SelectValue placeholder="Select language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="en">English</SelectItem>
+                          <SelectItem value="es">Spanish</SelectItem>
+                          <SelectItem value="fr">French</SelectItem>
+                          <SelectItem value="de">German</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="mcp-links" className="space-y-6">
+                <Card className="card-premium">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                        <Link className="w-5 h-5 text-accent-foreground" />
+                      </div>
+                      <span>MCP Links</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-foreground">MCP Links</h3>
+                      <Button 
+                        onClick={() => {
+                          const newLink = {
+                            id: Date.now().toString(),
+                            name: "",
+                            url: "",
+                            description: "",
+                            type: "custom"
+                          };
+                          setAgentConfig({
+                            ...agentConfig,
+                            integrations: [...agentConfig.integrations, newLink]
+                          });
+                        }}
+                        className="bg-primary hover:bg-primary-hover text-primary-foreground"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add MCP Link
+                      </Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Connect your agent to external services and APIs through MCP links. These enable your agent to access real-time data, perform actions, and integrate with third-party systems.
+                    </p>
+                    {agentConfig.integrations.length === 0 ? (
+                      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center bg-surface-50 hover:bg-surface-100 transition-colors">
+                        <div className="w-12 h-12 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-3">
+                          <Link className="w-6 h-6 text-primary" />
+                        </div>
+                        <h4 className="font-medium text-foreground mb-1">No MCP Links Added</h4>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Add MCP links to enable your agent to connect with external services and APIs
+                        </p>
                         <Button 
                           onClick={() => {
                             const newLink = {
@@ -1021,123 +1096,44 @@ export default function CreateAgent() {
                               integrations: [...agentConfig.integrations, newLink]
                             });
                           }}
-                          className="bg-primary hover:bg-primary-hover text-primary-foreground"
+                          variant="outline" 
+                          size="sm"
+                          className="transition-all duration-fast hover:border-primary"
                         >
                           <Plus className="w-4 h-4 mr-2" />
-                          Add MCP Link
+                          Add First MCP Link
                         </Button>
                       </div>
-                      
-                      <p className="text-sm text-muted-foreground">
-                        Connect your agent to external services and APIs through MCP links. These enable your agent to access real-time data, perform actions, and integrate with third-party systems.
-                      </p>
-
-                      {agentConfig.integrations.length === 0 ? (
-                        <div className="border-2 border-dashed border-border rounded-lg p-6 text-center bg-surface-50 hover:bg-surface-100 transition-colors">
-                          <div className="w-12 h-12 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-3">
-                            <Link className="w-6 h-6 text-primary" />
-                          </div>
-                          <h4 className="font-medium text-foreground mb-1">No MCP Links Added</h4>
-                          <p className="text-sm text-muted-foreground mb-3">
-                            Add MCP links to enable your agent to connect with external services and APIs
-                          </p>
-                          <Button 
-                            onClick={() => {
-                              const newLink = {
-                                id: Date.now().toString(),
-                                name: "",
-                                url: "",
-                                description: "",
-                                type: "custom"
-                              };
-                              setAgentConfig({
-                                ...agentConfig,
-                                integrations: [...agentConfig.integrations, newLink]
-                              });
-                            }}
-                            variant="outline" 
-                            size="sm"
-                            className="transition-all duration-fast hover:border-primary"
-                          >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add First MCP Link
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {agentConfig.integrations.map((link, index) => (
-                            <Card key={link.id} className="p-4 border border-border">
-                              <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                  <h4 className="font-medium text-foreground">MCP Link {index + 1}</h4>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                      setAgentConfig({
-                                        ...agentConfig,
-                                        integrations: agentConfig.integrations.filter((_, i) => i !== index)
-                                      });
-                                    }}
-                                    className="text-muted-foreground hover:text-destructive"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                                
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                                  <div className="space-y-2">
-                                    <Label className="text-sm font-medium">Link Name</Label>
-                                    <Input
-                                      placeholder="e.g., Weather API, Database Connection"
-                                      value={link.name}
-                                      onChange={(e) => {
-                                        const updatedLinks = [...agentConfig.integrations];
-                                        updatedLinks[index].name = e.target.value;
-                                        setAgentConfig({
-                                          ...agentConfig,
-                                          integrations: updatedLinks
-                                        });
-                                      }}
-                                      className="transition-colors hover:border-input-hover focus:border-primary"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label className="text-sm font-medium">Link Type</Label>
-                                    <Select 
-                                      value={link.type} 
-                                      onValueChange={(value) => {
-                                        const updatedLinks = [...agentConfig.integrations];
-                                        updatedLinks[index].type = value;
-                                        setAgentConfig({
-                                          ...agentConfig,
-                                          integrations: updatedLinks
-                                        });
-                                      }}
-                                    >
-                                      <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
-                                        <SelectValue placeholder="Select type" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="api">API Endpoint</SelectItem>
-                                        <SelectItem value="database">Database</SelectItem>
-                                        <SelectItem value="file-system">File System</SelectItem>
-                                        <SelectItem value="calendar">Calendar</SelectItem>
-                                        <SelectItem value="email">Email</SelectItem>
-                                        <SelectItem value="custom">Custom</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                </div>
-                                
+                    ) : (
+                      <div className="space-y-3">
+                        {agentConfig.integrations.map((link, index) => (
+                          <Card key={link.id} className="p-4 border border-border">
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <h4 className="font-medium text-foreground">MCP Link {index + 1}</h4>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setAgentConfig({
+                                      ...agentConfig,
+                                      integrations: agentConfig.integrations.filter((_, i) => i !== index)
+                                    });
+                                  }}
+                                  className="text-muted-foreground hover:text-destructive"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                                 <div className="space-y-2">
-                                  <Label className="text-sm font-medium">Connection URL</Label>
+                                  <Label className="text-sm font-medium">Link Name</Label>
                                   <Input
-                                    placeholder="e.g., https://api.example.com/v1, mcp://localhost:3000"
-                                    value={link.url}
+                                    placeholder="e.g., Weather API, Database Connection"
+                                    value={link.name}
                                     onChange={(e) => {
                                       const updatedLinks = [...agentConfig.integrations];
-                                      updatedLinks[index].url = e.target.value;
+                                      updatedLinks[index].name = e.target.value;
                                       setAgentConfig({
                                         ...agentConfig,
                                         integrations: updatedLinks
@@ -1146,29 +1142,70 @@ export default function CreateAgent() {
                                     className="transition-colors hover:border-input-hover focus:border-primary"
                                   />
                                 </div>
-                                
                                 <div className="space-y-2">
-                                  <Label className="text-sm font-medium">Description</Label>
-                                  <Textarea
-                                    placeholder="Describe what this MCP link provides access to..."
-                                    value={link.description}
-                                    onChange={(e) => {
+                                  <Label className="text-sm font-medium">Link Type</Label>
+                                  <Select 
+                                    value={link.type} 
+                                    onValueChange={(value) => {
                                       const updatedLinks = [...agentConfig.integrations];
-                                      updatedLinks[index].description = e.target.value;
+                                      updatedLinks[index].type = value;
                                       setAgentConfig({
                                         ...agentConfig,
                                         integrations: updatedLinks
                                       });
                                     }}
-                                    className="min-h-[60px] transition-colors hover:border-input-hover focus:border-primary"
-                                  />
+                                  >
+                                    <SelectTrigger className="transition-colors hover:border-input-hover focus:border-primary">
+                                      <SelectValue placeholder="Select type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="api">API Endpoint</SelectItem>
+                                      <SelectItem value="database">Database</SelectItem>
+                                      <SelectItem value="file-system">File System</SelectItem>
+                                      <SelectItem value="calendar">Calendar</SelectItem>
+                                      <SelectItem value="email">Email</SelectItem>
+                                      <SelectItem value="custom">Custom</SelectItem>
+                                    </SelectContent>
+                                  </Select>
                                 </div>
                               </div>
-                            </Card>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium">Connection URL</Label>
+                                <Input
+                                  placeholder="e.g., https://api.example.com/v1, mcp://localhost:3000"
+                                  value={link.url}
+                                  onChange={(e) => {
+                                    const updatedLinks = [...agentConfig.integrations];
+                                    updatedLinks[index].url = e.target.value;
+                                    setAgentConfig({
+                                      ...agentConfig,
+                                      integrations: updatedLinks
+                                    });
+                                  }}
+                                  className="transition-colors hover:border-input-hover focus:border-primary"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium">Description</Label>
+                                <Textarea
+                                  placeholder="Describe what this MCP link provides access to..."
+                                  value={link.description}
+                                  onChange={(e) => {
+                                    const updatedLinks = [...agentConfig.integrations];
+                                    updatedLinks[index].description = e.target.value;
+                                    setAgentConfig({
+                                      ...agentConfig,
+                                      integrations: updatedLinks
+                                    });
+                                  }}
+                                  className="min-h-[60px] transition-colors hover:border-input-hover focus:border-primary"
+                                />
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
