@@ -1,4 +1,4 @@
-import { useState } from "react";
+ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1068,8 +1068,8 @@ export default function CreateAgent() {
                         <Button size="sm">
                           <Plus className="mr-1" size={14} />
                           Add Tool
-                        </Button>
-                      </div>
+                          </Button>
+                        </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label>Tool Name</Label>
@@ -1077,15 +1077,15 @@ export default function CreateAgent() {
                             placeholder="e.g., Weather API"
                             className="mt-1"
                           />
-                        </div>
+                                </div>
                         <div>
                           <Label>MCP URL</Label>
-                          <Input
+                                    <Input
                             placeholder="https://api.example.com/mcp"
                             className="mt-1"
-                          />
-                        </div>
-                      </div>
+                                    />
+                                  </div>
+                                  </div>
                       <div className="mt-4">
                         <Label>Description</Label>
                         <Textarea
@@ -1093,8 +1093,8 @@ export default function CreateAgent() {
                           className="mt-1 h-20"
                         />
                       </div>
-                    </div>
-
+                                </div>
+                                
                     {/* Configured Tools */}
                     <div>
                       <h4 className="font-medium text-slate-900 mb-4">
@@ -1132,7 +1132,7 @@ export default function CreateAgent() {
                                     size={16}
                                   />
                                 )}
-                              </div>
+                                </div>
                               <div>
                                 <h5 className="font-medium text-slate-900">
                                   {tool.name}
@@ -1155,8 +1155,8 @@ export default function CreateAgent() {
                               </Button>
                             </div>
                           </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -1307,10 +1307,10 @@ export default function CreateAgent() {
                   <form>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       <Card>
-                        <CardHeader>
+                  <CardHeader>
                           <CardTitle>General Settings</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
+                  </CardHeader>
+                  <CardContent className="space-y-6">
                           <FormField
                             control={settingsForm.control}
                             name="language"
@@ -1321,17 +1321,17 @@ export default function CreateAgent() {
                                   <FormControl>
                                     <SelectTrigger>
                                       <SelectValue />
-                                    </SelectTrigger>
+                          </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                          <SelectContent>
                                     <SelectItem value="English (US)">English (US)</SelectItem>
                                     <SelectItem value="English (UK)">English (UK)</SelectItem>
                                     <SelectItem value="Spanish">Spanish</SelectItem>
                                     <SelectItem value="French">French</SelectItem>
                                     <SelectItem value="German">German</SelectItem>
                                     <SelectItem value="Chinese (Simplified)">Chinese (Simplified)</SelectItem>
-                                  </SelectContent>
-                                </Select>
+                          </SelectContent>
+                        </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -1379,7 +1379,7 @@ export default function CreateAgent() {
                                       <span className={`text-xs font-medium ${field.value === theme ? "text-blue-700" : "text-slate-700"}`}>{theme}</span>
                                     </button>
                                   ))}
-                                </div>
+                      </div>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -1420,15 +1420,15 @@ export default function CreateAgent() {
                                   <FormControl>
                                     <SelectTrigger>
                                       <SelectValue />
-                                    </SelectTrigger>
+                          </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                          <SelectContent>
                                     <SelectItem value="Short (100 words)">Short (100 words)</SelectItem>
                                     <SelectItem value="Medium (300 words)">Medium (300 words)</SelectItem>
                                     <SelectItem value="Long (500 words)">Long (500 words)</SelectItem>
                                     <SelectItem value="Very Long (1000 words)">Very Long (1000 words)</SelectItem>
-                                  </SelectContent>
-                                </Select>
+                          </SelectContent>
+                        </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -1450,7 +1450,7 @@ export default function CreateAgent() {
                                     className="flex-1"
                                   />
                                   <span className="text-sm text-slate-500">Creative</span>
-                                </div>
+                      </div>
                                 <p className="text-xs text-slate-500 mt-1">Current: {(field.value / 100).toFixed(1)}</p>
                                 <FormMessage />
                               </FormItem>
@@ -1460,7 +1460,7 @@ export default function CreateAgent() {
                             <div className="flex items-center space-x-2">
                               <Checkbox id="conversation-memory" />
                               <Label htmlFor="conversation-memory">Enable conversation memory</Label>
-                            </div>
+                    </div>
                             <div className="flex items-center space-x-2">
                               <Checkbox id="log-conversations" defaultChecked />
                               <Label htmlFor="log-conversations">Log conversations for analytics</Label>
@@ -1497,7 +1497,7 @@ export default function CreateAgent() {
                                 <div className="space-y-1 leading-none">
                                   <FormLabel>Enable voice prompting</FormLabel>
                                   <p className="text-sm text-slate-500">Allow users to speak their queries instead of typing</p>
-                                </div>
+                        </div>
                               </FormItem>
                             )}
                           />
@@ -1516,7 +1516,7 @@ export default function CreateAgent() {
                                 <SelectItem value="Chinese (Mandarin)">Chinese (Mandarin)</SelectItem>
                               </SelectContent>
                             </Select>
-                          </div>
+                      </div>
                           <div>
                             <Label>Voice Activation</Label>
                             <div className="space-y-2 mt-2">
@@ -1539,7 +1539,7 @@ export default function CreateAgent() {
                             <Input placeholder="Hey Assistant" disabled className="mt-1" />
                           </div>
                         </CardContent>
-                      </Card>
+                    </Card>
                       <Card>
                         <CardHeader>
                           <CardTitle>Voice Calling & Response</CardTitle>
@@ -1626,8 +1626,8 @@ export default function CreateAgent() {
                               </button>
                             </div>
                           </div>
-                        </CardContent>
-                      </Card>
+                  </CardContent>
+                </Card>
                     </div>
                   </form>
                 </Form>
