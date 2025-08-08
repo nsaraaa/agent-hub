@@ -13,6 +13,11 @@ import MyAgents from "./pages/MyAgents";
 import TrendingAgents from "./pages/TrendingAgents";
 import AllAgents from "./pages/AllAgents";
 import NotFound from "./pages/NotFound";
+import PromptManagement from "./pages/PromptManagement";
+import UserProfile from "./pages/UserProfile";
+import OrganizationProfile from "./pages/OrganizationProfile";
+import DeveloperHub from "./pages/DeveloperHub";
+import Marketplace from "./pages/Marketplace";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +66,31 @@ const App = () => (
           <Route path="/all-agents" element={
             <AppLayout>
               <AllAgents />
+            </AppLayout>
+          } />
+          <Route path="/prompt-management" element={
+            <AppLayout>
+              <PromptManagement />
+            </AppLayout>
+          } />
+          <Route path="/profile" element={
+            <AppLayout>
+              <UserProfile />
+            </AppLayout>
+          } />
+          <Route path="/organization" element={
+            <AppLayout>
+              <OrganizationProfile />
+            </AppLayout>
+          } />
+          <Route path="/developer-hub" element={
+            <AppLayout>
+              <DeveloperHub />
+            </AppLayout>
+          } />
+          <Route path="/marketplace" element={
+            <AppLayout>
+              <Marketplace />
             </AppLayout>
           } />
           <Route path="*" element={<NotFound />} />
