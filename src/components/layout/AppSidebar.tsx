@@ -10,6 +10,11 @@ import {
   Plus,
   TestTube,
   TrendingUp,
+  GitBranch,
+  User,
+  Building2,
+  Code,
+  ShoppingCart,
 } from "lucide-react";
 import {
   Sidebar,
@@ -42,12 +47,27 @@ const navigationItems = [
     items: [
       { title: "My Agents", url: "/my-agents", icon: Bot },
       { title: "Trending Agents", url: "/trending", icon: TrendingUp },
+      { title: "Marketplace", url: "/marketplace", icon: ShoppingCart },
     ],
   },
   {
     title: "Management",
     items: [
       { title: "All Agents", url: "/all-agents", icon: Users },
+      { title: "Prompt Management", url: "/prompt-management", icon: GitBranch },
+    ],
+  },
+  {
+    title: "Profiles",
+    items: [
+      { title: "User Profile", url: "/profile", icon: User },
+      { title: "Organization", url: "/organization", icon: Building2 },
+    ],
+  },
+  {
+    title: "Developer",
+    items: [
+      { title: "Developer Hub", url: "/developer-hub", icon: Code },
     ],
   },
 ];
