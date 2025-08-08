@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Plus, 
-  Bot, 
-  Play, 
-  BarChart3, 
-  TrendingUp, 
-  Users, 
-  MessageCircle, 
+import {
+  Plus,
+  Bot,
+  Play,
+  BarChart3,
+  TrendingUp,
+  Users,
+  MessageCircle,
   Star,
   Activity,
   Clock,
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-
+ 
 // Mock data for the dashboard
 const dashboardStats = {
   totalAgents: 24,
@@ -33,7 +33,7 @@ const dashboardStats = {
   monthlyGrowth: 12.5,
   responseTime: "1.2s"
 };
-
+ 
 const recentActivity = [
   {
     id: 1,
@@ -68,7 +68,7 @@ const recentActivity = [
     user: "Mike Johnson"
   }
 ];
-
+ 
 const trendingAgents = [
   {
     id: 1,
@@ -107,7 +107,7 @@ const trendingAgents = [
     growth: "+15%"
   }
 ];
-
+ 
 const quickActions = [
   {
     title: "Create Agent",
@@ -131,7 +131,7 @@ const quickActions = [
     color: "accent"
   }
 ];
-
+ 
 const yourAgents = [
   { id: 1, name: "SupportBot", icon: Bot },
   { id: 2, name: "SalesGuru", icon: Users },
@@ -144,7 +144,7 @@ const yourAgents = [
   { id: 9, name: "QuickHelp", icon: Clock },
   { id: 10, name: "Zapster", icon: Zap },
 ];
-
+ 
 const builtByCompany = [
   {
     id: 1,
@@ -183,11 +183,11 @@ const builtByCompany = [
     gradient: "from-teal-100 via-teal-50 to-white",
   },
 ];
-
+ 
 export default function Index() {
   const [selectedPeriod, setSelectedPeriod] = useState("7d");
   const [search, setSearch] = useState("");
-
+ 
   const getActivityIcon = (type: string) => {
     switch (type) {
       case "agent_created": return Plus;
@@ -197,7 +197,7 @@ export default function Index() {
       default: return Activity;
     }
   };
-
+ 
   const getActivityColor = (status: string) => {
     switch (status) {
       case "success": return "text-primary";
@@ -206,7 +206,7 @@ export default function Index() {
       default: return "text-muted-foreground";
     }
   };
-
+ 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "active": return "bg-primary-light text-primary border-primary/20";
@@ -215,7 +215,7 @@ export default function Index() {
       default: return "bg-surface-200 text-surface-600 border-surface-300";
     }
   };
-
+ 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-12">
